@@ -128,7 +128,13 @@ extension Repository {
         URL(fileURLWithPath: String(cString: git_repository_path(pointer)))
     }
 
-    // TODO: add state property (git_repository_state)
+    /// The current state of the repository.
+    ///
+    /// This indicates whether an operation (merge, cherry-pick, rebase, etc.) is in progress.
+    public var state: RepositoryState {
+        let rawState = git_repository_state(pointer)
+        return RepositoryState(rawValue: Int(rawState)) ?? .clean
+    }
 
     /// Check if the repository is empty.
     ///

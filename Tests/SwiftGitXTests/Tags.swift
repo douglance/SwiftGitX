@@ -24,6 +24,11 @@ extension Testing.Tag {
     @Tag static var show: Self
     @Tag static var status: Self
     @Tag static var `switch`: Self
+    @Tag static var merge: Self
+    @Tag static var cherryPick: Self
+    @Tag static var blame: Self
+    @Tag static var reflog: Self
+    @Tag static var state: Self
 
     // Collections
     @Tag static var branch: Self
