@@ -42,25 +42,44 @@ extension Repository {
         try index.add(files: files)
     }
 
-    // TODO: Investigate these methods
-
-    internal func remove(path: String) throws(SwiftGitXError) {
+    /// Removes a file from the index (unstages it).
+    ///
+    /// - Parameter path: The file path relative to the repository root directory.
+    ///
+    /// The path should be relative to the repository root directory.
+    /// For example, `README.md` or `Sources/SwiftGitX/Repository.swift`.
+    public func remove(path: String) throws(SwiftGitXError) {
         try index.remove(path: path)
     }
 
-    internal func remove(file: URL) throws(SwiftGitXError) {
+    /// Removes a file from the index (unstages it).
+    ///
+    /// - Parameter file: The file URL.
+    public func remove(file: URL) throws(SwiftGitXError) {
         try index.remove(file: file)
     }
 
-    internal func remove(paths: [String]) throws(SwiftGitXError) {
+    /// Removes files from the index (unstages them).
+    ///
+    /// - Parameter paths: The paths of the files to remove.
+    ///
+    /// The paths should be relative to the repository root directory.
+    /// For example, `README.md` or `Sources/SwiftGitX/Repository.swift`.
+    public func remove(paths: [String]) throws(SwiftGitXError) {
         try index.remove(paths: paths)
     }
 
-    internal func remove(files: [URL]) throws(SwiftGitXError) {
+    /// Removes files from the index (unstages them).
+    ///
+    /// - Parameter files: The file URLs to remove.
+    public func remove(files: [URL]) throws(SwiftGitXError) {
         try index.remove(files: files)
     }
 
-    internal func removeAll() throws(SwiftGitXError) {
+    /// Removes all files from the index.
+    ///
+    /// This method will clear the index.
+    public func removeAll() throws(SwiftGitXError) {
         try index.removeAll()
     }
 }
