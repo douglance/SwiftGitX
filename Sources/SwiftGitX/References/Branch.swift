@@ -107,6 +107,10 @@ public struct Branch: Reference, Sendable {
             } else { nil }
 
         // Get the remote of the branch.
+        // The remote lookup is best-effort: if the remote name is invalid or the
+        // remote cannot be found (e.g., a remote name like "." that libgit2
+        // rejects), we gracefully set remote to nil instead of failing the
+        // entire Branch initialization.
         var remoteName = git_buf()
         defer { git_buf_free(&remoteName) }
 
@@ -119,15 +123,19 @@ public struct Branch: Reference, Sendable {
         }
 
         if let rawRemoteName = remoteName.ptr, remoteName.size > 0 {
-            // Look up the remote.
-            let remotePointer = try git {
+            // Look up the remote. This may fail for branches whose remote name
+            // is not a valid remote (e.g., "."), so we treat lookup failure as
+            // remote = nil.
+            if let remotePointer = try? git({
                 var remotePointer: OpaquePointer?
                 let remoteStatus = git_remote_lookup(&remotePointer, repositoryPointer, rawRemoteName)
                 return (remotePointer, remoteStatus)
+            }) {
+                defer { git_remote_free(remotePointer) }
+                remote = try? Remote(pointer: remotePointer)
+            } else {
+                remote = nil
             }
-            defer { git_remote_free(remotePointer) }
-
-            remote = try Remote(pointer: remotePointer)
         } else {
             remote = nil
         }
